@@ -1,7 +1,7 @@
 # Pahe.in Bypass Download Link
 https://pahe.li/
 
-Just some regular tools to make it easier to get through the download links on pahe.in.
+Simple tool for parse the Pahe link and extract the cloud-hosted URL.
 
 ![Example](https://media.giphy.com/media/cAs1Ovh51mIx3tsen3/giphy.gif)
 
