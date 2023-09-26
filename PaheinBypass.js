@@ -65,16 +65,18 @@ export default class PaheinBypass {
                 }
                 this.bar.update(80);
                 await new Promise(r => setTimeout(r, 8000));
-                const pages = await browser.pages();
                 try {
+                    const pages = await browser.pages();
                     const content = await pages[2].content();
                     this.bar.update(100);
                     const regexDirectAtob = /location\.href = atob\('([^']+)'\);/gm;
                     const urlDirect = regexDirectAtob.exec(content);
                     this.bar.stop();
+                    browser.close();
                     resolve(atob(urlDirect[1]));
                 } catch (e) {
                     this.bar.stop();
+                    browser.close();
                     reject(e);
                 }
             } catch (e) {
