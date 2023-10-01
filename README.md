@@ -3,7 +3,7 @@ https://pahe.li/
 
 Simple tool for parse the Pahe link and extract the cloud-hosted URL.
 
-![Example](https://media.giphy.com/media/cAs1Ovh51mIx3tsen3/giphy.gif)
+![Example](https://github.com/hamngku/PaheinBypass/assets/142080978/6e60e3c6-c241-4765-a431-4d9820416b14)
 
 # Features
 - Bypass Download Link to Direct Link
