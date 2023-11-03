@@ -5,7 +5,8 @@ This tool only helps you download files from the host files on the PAHE.in websi
 
 *NB: Your internet connection will determine how well and how fast this works.*
 
-![Example](https://github.com/hamngku/PaheinBypass/assets/142080978/6e60e3c6-c241-4765-a431-4d9820416b14)
+![Example](https://github.com/hamngku/PaheinBypass/assets/142080978/73da5d24-8778-4ef0-8660-0855c258df4d)
+
 
 # Features
 - Bypass Download Link to Direct Link
