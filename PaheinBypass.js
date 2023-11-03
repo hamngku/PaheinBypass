@@ -11,7 +11,7 @@ export default class PaheinBypass {
     static reJsScriptEncoded = /<script[\s\S]*?>[\s\S]*?<\/script>/gi;
     static reHideContent = /<[^>]*target="_blank" class="shortc-button small [^>]* " rel="nofollow noreferrer noopener">([^<]*)<\/[^>]*>/g;
     static reLink = /window\.addEventListener\('load',function\(\){\(function\(\){let counter=0;let oldlet='[^']+';var [^=]+=([^}]+})/;
-    
+
     constructor (paheUrl) {
         if (this.isValidUrl(paheUrl)){
             this.paheUrl = paheUrl;
@@ -22,7 +22,7 @@ export default class PaheinBypass {
 
     async initializeBrowser() {
         this.browser = await puppeteer.launch({
-            headless: 'new',
+            headless: false,
             executablePath: platform() === 'win32' ? 'C:\\Program Files\\Google\\Chrome\\Application\\chrome.exe' : '/usr/bin/google-chrome-stable',
             args: [
                 '--no-sandbox',
@@ -71,7 +71,6 @@ export default class PaheinBypass {
             resolve(resultAll);
         });
     }
-    
 
     parseLink (paheUrl) {
         return new Promise(async (resolve, reject) => {
@@ -146,8 +145,9 @@ export default class PaheinBypass {
                     */
                     resolve('');
                 }
+
                 try {
-                    await new Promise(r => setTimeout(r, 3 * 1000));
+                    await new Promise(r => setTimeout(r, 8 * 1000));
                     const pages = await this.browser.pages();
                     const content = await pages[2].content();
                     let reDirectAtob = /atob\('([^']+)'\);/;
@@ -166,8 +166,8 @@ export default class PaheinBypass {
                 resolve('');
             }
         })
-    } 
-    
+    }
+
     isValidUrl (string) {
         try {
             const urlObject = new URL(string);
