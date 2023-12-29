@@ -172,7 +172,9 @@ export default class PaheinBypass {
         try {
             const urlObject = new URL(string);
             const urlHost = urlObject.host;
-            if (urlHost === 'pahe.in' || urlHost === 'pahe.ph' || urlHost === 'pahe.li') return true;
+            const paheDomain = ["pahe.in", "pahe.ph", "pahe.li", "pahe.me"];
+            if (paheDomain.includes(urlHost)) return true;
+            // if (urlHost === 'pahe.in' || urlHost === 'pahe.ph' || urlHost === 'pahe.li' || urlHost === 'pahe.me') return true;
             return false;
         } catch (err) {
             return false;
