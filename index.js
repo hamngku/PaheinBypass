@@ -21,7 +21,7 @@ const startApp = async() => {
         1fichier.com, drive.google.com, mega.nz, megaup.net ,pixeldrain.com, send.cm, uptobox.com
         ["1F", "GD", "MG", "MU", "PD", "SD", "SND", "UTB"]
     */
-    const paheLink = await readLineAsync("* Enter Pahe.in (pahe.li) Download Link: ");
+    const paheLink = await readLineAsync("* Enter Pahe.in (pahe.ink) Download Link: ");
     try {
         const paheBypass = new PaheinBypass(paheLink);
         console.info("* Finding all the download links on this page."); 
