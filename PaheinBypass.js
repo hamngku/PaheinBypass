@@ -187,7 +187,7 @@ export default class PaheinBypass {
         try {
             const urlObject = new URL(string);
             const urlHost = urlObject.host;
-            console.log(urlHost);
+
             const paheDomain = ["pahe.in", "pahe.ph", "pahe.li", "pahe.me", "pahe.ink"];
 
             if (paheDomain.includes(urlHost)) return true;
