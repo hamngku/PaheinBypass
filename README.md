@@ -1,5 +1,5 @@
 # Pahe.in Bypass Download Link
-https://pahe.li/
+https://pahe.ink/
 
 This tool only helps you download files from the host files on the PAHE.in website. It doesn't bypass anything, it just automatically getting downloads url files from the shortlinks.
 
