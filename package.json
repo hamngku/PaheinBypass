@@ -1,6 +1,6 @@
 {
   "name": "paheinbypass",
-  "version": "1.1.1",
+  "version": "1.2.0",
   "description": "This tool only helps you download files from the host files on the PAHE.in website. It doesn't bypass anything, it just automatically downloads files from the shortlinks.",
   "main": "index.js",
   "type": "module",
@@ -10,7 +10,8 @@
   "keywords": [
     "pahe.in",
     "pahe.ph",
-    "pahe.li"
+    "pahe.li",
+    "pahe.ink"
   ],
   "bugs": {
     "url": "https://github.com/hamngku/PaheinBypass/issues"
