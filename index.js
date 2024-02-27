@@ -24,13 +24,15 @@ const startApp = async() => {
     const paheLink = await readLineAsync("* Enter Pahe.in (pahe.li) Download Link: ");
     try {
         const paheBypass = new PaheinBypass(paheLink);
-        console.log("* Finding all the download links on this page."); 
-        console.log("* Avalible host file: 1F, GD, MG, MU, PD, SD, SND, UTB")
-        const filterHost = await readLineAsync("* To filter which hosts to include, input them like this: GD, MG, etc\n  If you don't want to filter, just type 'NO' and press enter: ");
-        const filterHostArr = filterHost.toLowerCase() === 'no' ? [] : filterHost.split(',');
-        const links = await paheBypass.getAllLinks(filterHostArr);
-        console.log(`* Done here all the links`); 
-        console.info(links);
+        console.info("* Finding all the download links on this page."); 
+        const getAllLinks = await paheBypass.getAllLinks();
+        console.info(`* Avalible host file: ${getAllLinks.hostsAvailable.join(", ")}`);
+        const filterHost = await readLineAsync("* To filter which hosts to include, input them like this: GD, MG, etc\n  If you don't want to filter, just type 'NO' or just press enter: ");
+        const filterHostArr = filterHost.toLowerCase() === 'no' || filterHost === "" ? [] : filterHost.split(',');
+        console.info("* Trying to get direct links download.");
+        const getBypassHostLinks = await paheBypass.getBypassHostLinks(filterHostArr);
+        console.info(`* Done here all the links`); 
+        console.info(getBypassHostLinks);
     } catch (error) {
         console.error(error);
     }

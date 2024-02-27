@@ -16,6 +16,7 @@ export default class PaheinBypass {
         if (this.isValidUrl(paheUrl)){
             this.paheUrl = paheUrl;
             this.browser = null;
+            this.paheHostDownloads = { hostsAvailable: [], hostsUrl: [] };
             this.bar = new cliProgress.SingleBar({}, cliProgress.Presets.shades_classic);
         }
     }
@@ -36,22 +37,36 @@ export default class PaheinBypass {
         });
     }
 
-    async getAllLinks(filterHost = []) {
+    async getAllLinks() {
         return new Promise(async (resolve, reject) => {
             if (this.browser == null){
                 await this.initializeBrowser();
             }
+            const parsedLink = await this.parseLink(this.paheUrl);
+            const uniqueHosts = Array.from(new Set(parsedLink.map(item => item.host)));
+            const cleanItem = (item) => item.trim().split(' ')[0];
+            const cleanedArray = uniqueHosts.map(cleanItem);
+            const uniqueArray = [...new Set(cleanedArray)];
+            this.paheHostDownloads = { hostsAvailable: uniqueArray, hostsUrl: parsedLink };
+            
+            resolve(this.paheHostDownloads);
+        });
+    }
+
+    async getBypassHostLinks(filterHost = []){
+        return new Promise(async (resolve, reject) => {
             let resultAll = [];
             const filterLinkByHost = (arrLink, filter) => {
                 const filteredLinks = [];
                 for (const link of arrLink) {
-                    if (filter.includes(link.host)) {
+                    const linkHost = link.host.trim().split(' ')[0] || link.host; 
+                    if (filter.includes(linkHost)) {
                         filteredLinks.push(link);
                     }
                 }
                 return filteredLinks;
             };
-            const parsedLink = await this.parseLink(this.paheUrl);
+            const parsedLink = this.paheHostDownloads.hostsUrl;
             const parsedLinkFiltered = filterLinkByHost(parsedLink, filterHost);
             const linkCount = filterHost.length > 0 ? parsedLinkFiltered.length : parsedLink.length;
             this.bar.start(linkCount, 0);
@@ -172,7 +187,10 @@ export default class PaheinBypass {
         try {
             const urlObject = new URL(string);
             const urlHost = urlObject.host;
-            if (urlHost === 'pahe.in' || urlHost === 'pahe.ph' || urlHost === 'pahe.li') return true;
+            console.log(urlHost);
+            const paheDomain = ["pahe.in", "pahe.ph", "pahe.li", "pahe.me", "pahe.ink"];
+
+            if (paheDomain.includes(urlHost)) return true;
             return false;
         } catch (err) {
             return false;
