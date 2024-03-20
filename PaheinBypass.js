@@ -23,7 +23,7 @@ export default class PaheinBypass {
 
     async initializeBrowser() {
         this.browser = await puppeteer.launch({
-            headless: 'new',
+            headless: false,
             executablePath: platform() === 'win32' ? 'C:\\Program Files\\Google\\Chrome\\Application\\chrome.exe' : '/usr/bin/google-chrome-stable',
             args: [
                 '--no-sandbox',
@@ -87,7 +87,7 @@ export default class PaheinBypass {
         });
     }
 
-    parseLink (paheUrl) {
+    async parseLink (paheUrl) {
         return new Promise(async (resolve, reject) => {
             let tempJsPahe = 'filepahe.js';
             const page = await this.browser.newPage();
@@ -125,7 +125,7 @@ export default class PaheinBypass {
         })
     }
 
-    bypassUrl (urlLink) {
+    async bypassUrl (urlLink) {
         return new Promise(async (resolve, reject) => {
             try {
                 const page = await this.browser.newPage();
@@ -136,7 +136,7 @@ export default class PaheinBypass {
                 const urlHost = urlObject.host;
                 if (urlHost === "intercelestial.com"){
                     await page.waitForSelector('#soralink-human-verif-main', { visible: true });
-                    await page.click('#soralink-human-verif-main')
+                    await page.click('#soralink-human-verif-main');
                     await page.waitForSelector("#generater", { visible: true });
                     let elementG = await page.$("#generater");
                     let boxG = await elementG.boundingBox();
@@ -145,6 +145,29 @@ export default class PaheinBypass {
                     let elementSL = await page.$("#showlink");
                     let boxSL = await elementSL.boundingBox();
                     await page.mouse.click(boxSL.x + boxSL.width / 2, boxSL.y + boxSL.height / 2);
+
+                    await new Promise(r => setTimeout(r, 8 * 1000));
+                    const pages = await this.browser.pages();
+                    const directDlLink = await this.parseDlLinkPage(pages);
+
+                    resolve(directDlLink);
+                }else if (urlHost === "linegee.net"){
+                    await page.waitForSelector('#soralink-human-verif-main', { visible: true });
+                    await page.click('#soralink-human-verif-main');
+                    await page.waitForSelector("#generater", { visible: true });
+                    let elementG = await page.$("#generater");
+                    let boxG = await elementG.boundingBox();
+                    await page.mouse.click(boxG.x + boxG.width / 2, boxG.y + boxG.height / 2);
+                    await page.waitForSelector("#showlink", { visible: true });
+                    let elementSL = await page.$("#showlink");
+                    let boxSL = await elementSL.boundingBox();
+                    await page.mouse.click(boxSL.x + boxSL.width / 2, boxSL.y + boxSL.height / 2);
+                    
+                    await new Promise(r => setTimeout(r, 8 * 1000));
+                    const pages = await this.browser.pages();
+                    const directDlLink = await this.parseDlLinkPage(pages);
+
+                    resolve(directDlLink);
                 }else if (urlHost === "teknoasian.com"){
                     // Maybe PAHE no longer uses the teknoasian.com domain for download links.
                     /* await new Promise(r => setTimeout(r, 8000));
@@ -160,27 +183,48 @@ export default class PaheinBypass {
                     */
                     resolve('');
                 }
+            } catch (e) {
+                resolve('');
+            }
+        })
+    }
 
+    async parseDlLinkPage (pages) {
+        return new Promise(async (resolve, reject) => {
+            const urlObject = new URL(pages[2].url());
+            const urlHost = urlObject.host;
+            if (urlHost == "spacetica.com") {
                 try {
-                    await new Promise(r => setTimeout(r, 8 * 1000));
-                    const pages = await this.browser.pages();
+                    const content = await pages[2].content();
+                    let reDirectLink = /<a href="([^"]+)"?>\s+<button class="btn btn-default">Continue<\/button>\s+<\/a>/;
+                    const urlDirect = content.match(reDirectLink);
+                    const linkBypass = urlDirect[1];
+                    for (const [index, pgs] of pages.entries()) {
+                        if (index != 0){
+                            await pgs.close();
+                        }
+                    }
+                    resolve(linkBypass);
+                } catch (e) {
+                    resolve('');
+                }
+            } else if (urlHost === "linegee.net") {
+                try {
                     const content = await pages[2].content();
                     let reDirectAtob = /atob\('([^']+)'\);/;
                     const urlDirect = content.match(reDirectAtob);
                     const linkBypass = atob(urlDirect[1]);
-                    await pages[2].close();
-                    await page.close();
+                    for (const [index, pgs] of pages.entries()) {
+                        if (index != 0){
+                            await pgs.close();
+                        }
+                    }
                     resolve(linkBypass);
                 } catch (e) {
-                    // console.error(e);
-                    await page.close();
                     resolve('');
                 }
-            } catch (e) {
-                // console.error(e);
-                resolve('');
             }
-        })
+        });
     }
 
     isValidUrl (string) {
