@@ -195,36 +195,26 @@ export default class PaheinBypass {
             try {
                 const urlObject = new URL(pages[2].url());
                 const urlHost = urlObject.host;
-            } catch (e) {
-                resolve(directLinkResult);
-            }
-            if (urlHost == "spacetica.com") {
-                try {
+                if (urlHost == "spacetica.com") {
                     const content = await pages[2].content();
                     let reDirectLink = /<a href="([^"]+)"?>\s+<button class="btn btn-default">Continue<\/button>\s+<\/a>/;
                     const urlDirect = content.match(reDirectLink);
-                    const linkBypass = urlDirect[1];
-                    directLinkResult = linkBypass;
-                } catch (e) {
-                    console.error(e);
-                }
-            } else if (urlHost === "linegee.net") {
-                try {
+                    directLinkResult = urlDirect[1];
+                } else if (urlHost === "linegee.net") {
                     const content = await pages[2].content();
                     let reDirectAtob = /atob\('([^']+)'\);/;
                     const urlDirect = content.match(reDirectAtob);
-                    const linkBypass = atob(urlDirect[1]);
-                    directLinkResult = linkBypass;
-                } catch (e) {
-                    console.error(e);
+                    directLinkResult = atob(urlDirect[1]);
                 }
-            }
-            for (const [index, pgs] of pages.entries()) {
-                if (index != 0){
-                    await pgs.close();
+                for (const [index, pgs] of pages.entries()) {
+                    if (index != 0){
+                        await pgs.close();
+                    }
                 }
+                resolve(directLinkResult);
+            } catch (e) {
+                resolve(directLinkResult);
             }
-            resolve(directLinkResult);
         });
     }
 
