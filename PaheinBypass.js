@@ -191,27 +191,22 @@ export default class PaheinBypass {
 
     async parseDlLinkPage (pages) {
         return new Promise(async (resolve, reject) => {
-            const urlObject = new URL(pages[2].url());
-            const urlHost = urlObject.host;
+            let directLinkResult = '';
+            try {
+                const urlObject = new URL(pages[2].url());
+                const urlHost = urlObject.host;
+            } catch (e) {
+                resolve(directLinkResult);
+            }
             if (urlHost == "spacetica.com") {
                 try {
                     const content = await pages[2].content();
                     let reDirectLink = /<a href="([^"]+)"?>\s+<button class="btn btn-default">Continue<\/button>\s+<\/a>/;
                     const urlDirect = content.match(reDirectLink);
                     const linkBypass = urlDirect[1];
-                    for (const [index, pgs] of pages.entries()) {
-                        if (index != 0){
-                            await pgs.close();
-                        }
-                    }
-                    resolve(linkBypass);
+                    directLinkResult = linkBypass;
                 } catch (e) {
-                    for (const [index, pgs] of pages.entries()) {
-                        if (index != 0){
-                            await pgs.close();
-                        }
-                    }
-                    resolve('');
+                    console.error(e);
                 }
             } else if (urlHost === "linegee.net") {
                 try {
@@ -219,21 +214,17 @@ export default class PaheinBypass {
                     let reDirectAtob = /atob\('([^']+)'\);/;
                     const urlDirect = content.match(reDirectAtob);
                     const linkBypass = atob(urlDirect[1]);
-                    for (const [index, pgs] of pages.entries()) {
-                        if (index != 0){
-                            await pgs.close();
-                        }
-                    }
-                    resolve(linkBypass);
+                    directLinkResult = linkBypass;
                 } catch (e) {
-                    for (const [index, pgs] of pages.entries()) {
-                        if (index != 0){
-                            await pgs.close();
-                        }
-                    }
-                    resolve('');
+                    console.error(e);
                 }
             }
+            for (const [index, pgs] of pages.entries()) {
+                if (index != 0){
+                    await pgs.close();
+                }
+            }
+            resolve(directLinkResult);
         });
     }
 
