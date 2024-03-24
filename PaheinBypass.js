@@ -119,7 +119,7 @@ export default class PaheinBypass {
                 resultAll.push({link: value.trim(), host: resultsHost[arrIndex].trim()});
                 arrIndex++;
             });
-            unlinkSync(tempJsPahe);
+            // unlinkSync(tempJsPahe);
             await page.close();
             resolve(resultAll);
         })
@@ -206,6 +206,11 @@ export default class PaheinBypass {
                     }
                     resolve(linkBypass);
                 } catch (e) {
+                    for (const [index, pgs] of pages.entries()) {
+                        if (index != 0){
+                            await pgs.close();
+                        }
+                    }
                     resolve('');
                 }
             } else if (urlHost === "linegee.net") {
@@ -221,6 +226,11 @@ export default class PaheinBypass {
                     }
                     resolve(linkBypass);
                 } catch (e) {
+                    for (const [index, pgs] of pages.entries()) {
+                        if (index != 0){
+                            await pgs.close();
+                        }
+                    }
                     resolve('');
                 }
             }
