@@ -23,7 +23,7 @@ export default class PaheinBypass {
 
     async initializeBrowser() {
         this.browser = await puppeteer.launch({
-            headless: 'new,
+            headless: 'new',
             executablePath: platform() === 'win32' ? 'C:\\Program Files\\Google\\Chrome\\Application\\chrome.exe' : '/usr/bin/google-chrome-stable',
             args: [
                 '--no-sandbox',
